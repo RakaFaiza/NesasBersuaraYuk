@@ -651,14 +651,15 @@ tr:hover {
     padding: 16px;
   }
   .profile-info {
-    grid-template-columns: auto 1fr;
-    gap: 10px 15px;
+    grid-template-columns: 80px 1fr;
+    gap: 12px 10px;
   }
   .profile-info strong {
     text-align: left;
   }
   .profile-info span {
-    word-break: break-all; /* Mencegah email panjang merusak layout di layar sempit */
+    word-break: break-all;
+    overflow-wrap: break-word;
   }
 }
 
