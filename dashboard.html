@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Dashboard - Bersuara Yuk</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Tombol hamburger untuk mobile -->
+    <button class="menu-toggle" id="menuToggle">☰</button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar dengan logo sekolah -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo-sekolah.png" alt="Logo SMKNI" class="school-logo">
+        <h2>SMKN 1 SUMEDANG</h2>
+        <p>Bersuara Yuk!</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#" data-page="beranda" class="active">🏠 Beranda</a></li>
+          <li><a href="#" data-page="laporan">📝 Laporan</a></li>
+          <li><a href="#" data-page="suara">📣 Suara</a></li>
+          <li><a href="#" data-page="profil">👤 Profil</a></li>
+          <li><a href="#" data-page="tentang">ℹ️ Tentang & Bantuan</a></li>
+          <li id="menuAdminReports" style="display:none;">
+            <a href="#" data-page="ringkasan">📊 Ringkasan</a>
+          </li>
+          <li id="menuUserManagement" style="display:none;">
+            <a href="#" data-page="manajemen">🧑‍💼 Manajemen Akun</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content" id="mainContent"></main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/siswa.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

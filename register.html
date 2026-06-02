@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar - Bersuara Yuk</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>📝 Aktivasi Akun Siswa</h2>
+    <p style="color: #666;">Masukkan NISN, nama, dan kelas yang sudah terdaftar, lalu email untuk membuat akun.</p>
+    <form id="registerForm">
+      <input type="text" id="nisn" placeholder="NISN (hanya angka)" required pattern="[0-9]+">
+      <input type="text" id="nama" placeholder="Nama Lengkap" required>
+      <select id="kelas" required>
+        <option value="">Pilih Kelas</option>
+        <option>X RPL 1</option><option>X RPL 2</option><option>X TKJ 1</option><option>X TKJ 2</option><option>X TITL 1</option><option>X TITL 2</option><option>X TEI 1</option><option>X TEI 2</option><option>X DPIB 1</option><option>X DPIB 2</option><option>X SK 1</option><option>X SK 2</option><option>X TKRO 1</option><option>X TKRO 2</option><option>X TPM 1</option><option>X TPM 2</option><option>X TPL 1</option><option>X TPL 2</option>
+        <option>XI RPL 1</option><option>XI RPL 2</option><option>XI TKJ 1</option><option>XI TKJ 2</option><option>XI TITL 1</option><option>XI TITL 2</option><option>XI TEI 1</option><option>XI TEI 2</option><option>XI DPIB 1</option><option>XI DPIB 2</option><option>XI SK 1</option><option>XI SK 2</option><option>XI TKRO 1</option><option>XI TKRO 2</option><option>XI TPM 1</option><option>XI TPM 2</option><option>XI TPL 1</option><option>XI TPL 2</option>
+        <option>XII RPL 1</option><option>XII RPL 2</option><option>XII TKJ 1</option><option>XII TKJ 2</option><option>XII TITL 1</option><option>XII TITL 2</option><option>XII TEI 1</option><option>XII TEI 2</option><option>XII DPIB 1</option><option>XII DPIB 2</option><option>XII SK 1</option><option>XII SK 2</option><option>XII TKRO 1</option><option>XII TKRO 2</option><option>XII TPM 1</option><option>XII TPM 2</option><option>XII TPL 1</option><option>XII TPL 2</option>
+      </select>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password (min. 6 karakter)" required minlength="6">
+      <input type="password" id="confirmPassword" placeholder="Konfirmasi Password" required minlength="6">
+      <button type="submit">Daftar</button>
+    </form>
+    <p>Sudah punya akun? <a href="index.html">Login</a></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nisn = document.getElementById('nisn').value.trim();
+    const inputNama = document.getElementById('nama').value.trim();
+    const inputKelas = document.getElementById('kelas').value;
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+
+    if (password !== confirm) {
+      alert('Password dan konfirmasi tidak cocok!');
+      return;
+    }
+
+    // 1. Cek apakah NISN terdaftar di pending_profiles
+    const { data: checkData, error: checkError } = await supabase.rpc('check_pending_nisn', { nisn_input: nisn });
+    if (checkError || !checkData.exists) {
+      alert('NISN tidak ditemukan. Hubungi admin untuk pendaftaran.');
+      return;
+    }
+
+    // 2. Validasi nama dan kelas harus cocok persis dengan data di pending
+    if (inputNama !== checkData.nama) {
+      alert(`Nama tidak sesuai.`);
+      return;
+    }
+    if (inputKelas !== checkData.kelas) {
+      alert(`Kelas tidak sesuai.`);
+      return;
+    }
+
+    const nama = checkData.nama;
+    const kelas = checkData.kelas;
+
+    // 3. Daftar ke Supabase Auth (metadata akan digunakan oleh trigger)
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { nisn, nama, kelas, role: 'student' }
+      }
+    });
+
+    if (signUpError) {
+      alert('Gagal mendaftar: ' + signUpError.message);
+      return;
+    }
+
+    // 4. Beri tahu user untuk verifikasi email
+    alert('✅ Pendaftaran berhasil!\n\nSilakan cek email Anda (termasuk folder Spam) untuk melakukan verifikasi akun.\nSetelah verifikasi, silakan login.');
+
+    // Redirect ke halaman login
+    window.location.href = 'index.html';
+  });
+</script>
+</body>
+</html>
